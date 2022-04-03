@@ -1,0 +1,14 @@
+{
+    "extends": "@tsconfig/node16/tsconfig.json",
+    "compilerOptions": {
+        "outDir": "./out"
+    },
+    "include": [
+        "./**/**.ts",
+        ".eslintrc.js"
+    ],
+    "exclude": [
+        "node_modules",
+        "out"
+    ]
+}
