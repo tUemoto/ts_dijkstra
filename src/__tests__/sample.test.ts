@@ -1,4 +1,4 @@
-import { validatePort } from '../src/validatePort'
+import { validatePort } from '../validatePort'
 
 test('arg is undefined', () => {
   expect(validatePort(undefined)).toBe(null)
