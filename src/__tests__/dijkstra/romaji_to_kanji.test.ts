@@ -3,6 +3,7 @@ import { GLOBAL_EKIMEI_LIST } from '../../consts/metro'
 
 let ekimei_list: EkimeiT[]
 beforeEach(() => {
+  // 実行時に定数を直接利用しないようにリストをコピーして変数に格納し直す
   ekimei_list = GLOBAL_EKIMEI_LIST.concat()
 })
 
