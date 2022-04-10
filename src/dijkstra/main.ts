@@ -51,7 +51,6 @@ const koushin = function (
 ): EkiT[] {
   return v.map((q: EkiT) => {
     const ekikanKyori = getEkikanKyori(p.namae, q.namae, ekikanList)
-    console.log('ekikanKyori: ', ekikanKyori)
     if (ekikanKyori + p.saitan_kyori < q.saitan_kyori) {
       return {
         namae: q.namae,
