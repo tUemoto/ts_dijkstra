@@ -1,4 +1,9 @@
-import { dijkstraMain, koushin, saitanWoBunri } from '../../dijkstra/main'
+import {
+  dijkstra,
+  dijkstraMain,
+  koushin,
+  saitanWoBunri,
+} from '../../dijkstra/main'
 
 describe('saitanWoBunri', () => {
   const ekiA: EkiT = { namae: 'eki_a', saitan_kyori: 0.1, temae_list: [] }
@@ -92,5 +97,33 @@ describe('dijkstraMain', () => {
         temae_list: ['池袋', '新大塚', '茗荷谷'],
       },
     ])
+  })
+})
+
+describe('dijkstra', () => {
+  test('存在しない駅名を指定したとき', () => {
+    expect(() => {
+      dijkstra('hoge', 'fuga')
+    }).toThrow(
+      '指定した駅名のどちらかが存在しませんでした。{shiten: "hoge", shuten: "fuga"}',
+    )
+  })
+  test('正常系1', () => {
+    const ekiList = [
+      '護国寺',
+      '江戸川橋',
+      '飯田橋',
+      '市ヶ谷',
+      '麹町',
+      '永田町',
+      '青山一丁目',
+      '表参道',
+      '渋谷',
+    ]
+    expect(dijkstra('shibuya', 'gokokuji')).toStrictEqual({
+      namae: '護国寺',
+      saitan_kyori: 9.8,
+      temae_list: ekiList,
+    })
   })
 })

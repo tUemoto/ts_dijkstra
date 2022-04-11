@@ -1,5 +1,7 @@
-import { GLOBAL_EKIKAN_LIST } from '../consts/metro'
+import { GLOBAL_EKIKAN_LIST, GLOBAL_EKIMEI_LIST } from '../consts/metro'
 import { getEkikanKyori } from './get_ekikan_kyori'
+import { makeInitialEkiList } from './make_ekimei_list'
+import { romajiToKanji } from './romaji_to_kanji'
 
 /**
  * 目的: EkiT[]型の変数 lst を受け取り、
@@ -79,10 +81,22 @@ const dijkstraMain = function (
     return []
   }
   const [saitan, nokori] = saitanWoBunri(ekiTList)
-  console.log('saitan, nokori: ', [saitan, nokori])
   const updated = koushin(saitan, nokori, ekikanTList.concat())
-  console.log('updated: ', updated)
   return [saitan].concat(dijkstraMain(updated, ekikanTList.concat()))
 }
 
-export { saitanWoBunri, koushin, dijkstraMain }
+const dijkstra = function (shiten: string, shuten: string): EkiT {
+  const shitenKanji = romajiToKanji(shiten, GLOBAL_EKIMEI_LIST.concat())
+  const shutenKanji = romajiToKanji(shuten, GLOBAL_EKIMEI_LIST.concat())
+  const ekiList = makeInitialEkiList(GLOBAL_EKIMEI_LIST.concat(), shitenKanji)
+  const calculated: EkiT[] = dijkstraMain(ekiList, GLOBAL_EKIKAN_LIST.concat())
+  const result = calculated.find((data) => data.namae === shutenKanji)
+  if (result === undefined) {
+    throw new Error(
+      `指定した駅名のどちらかが存在しませんでした。{shiten: "${shiten}", shuten: "${shuten}"}`,
+    )
+  }
+  return result
+}
+
+export { saitanWoBunri, koushin, dijkstraMain, dijkstra }
