@@ -1,4 +1,4 @@
-import { koushin, saitanWoBunri } from '../../dijkstra/main'
+import { dijkstraMain, koushin, saitanWoBunri } from '../../dijkstra/main'
 
 describe('saitanWoBunri', () => {
   const ekiA: EkiT = { namae: 'eki_a', saitan_kyori: 0.1, temae_list: [] }
@@ -57,6 +57,40 @@ describe('koushin', () => {
       ekiB,
       ekiC,
       ekiD,
+    ])
+  })
+})
+
+describe('dijkstraMain', () => {
+  const ekiA: EkiT = { namae: '池袋', saitan_kyori: Infinity, temae_list: [] }
+  const ekiB: EkiT = {
+    namae: '新大塚',
+    saitan_kyori: 1.2,
+    temae_list: ['新大塚', '茗荷谷'],
+  }
+  const ekiC: EkiT = {
+    namae: '茗荷谷',
+    saitan_kyori: 0,
+    temae_list: ['茗荷谷'],
+  }
+  const ekiD: EkiT = { namae: '後楽園', saitan_kyori: Infinity, temae_list: [] }
+  const lst = [ekiA, ekiB, ekiC, ekiD]
+  test('未確定の駅がない', () => {
+    expect(dijkstraMain([])).toStrictEqual([])
+  })
+  test('駅間リストが空', () => {
+    expect(dijkstraMain(lst, [])).toStrictEqual([ekiC, ekiB, ekiA, ekiD])
+  })
+  test('正常系', () => {
+    expect(dijkstraMain(lst)).toStrictEqual([
+      { namae: '茗荷谷', saitan_kyori: 0, temae_list: ['茗荷谷'] },
+      { namae: '新大塚', saitan_kyori: 1.2, temae_list: ['新大塚', '茗荷谷'] },
+      { namae: '後楽園', saitan_kyori: 1.8, temae_list: ['後楽園', '茗荷谷'] },
+      {
+        namae: '池袋',
+        saitan_kyori: 3,
+        temae_list: ['池袋', '新大塚', '茗荷谷'],
+      },
     ])
   })
 })

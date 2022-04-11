@@ -47,10 +47,11 @@ const saitanWoBunri = function (lst: EkiT[]): [EkiT, EkiT[]] {
 const koushin = function (
   p: EkiT,
   v: EkiT[],
-  ekikanList: EkikanT[] = GLOBAL_EKIKAN_LIST,
+  ekikanList: EkikanT[] = GLOBAL_EKIKAN_LIST.concat(),
 ): EkiT[] {
   return v.map((q: EkiT) => {
-    const ekikanKyori = getEkikanKyori(p.namae, q.namae, ekikanList)
+    // 各ループでekikanListを使うので、別のオブジェクトにするためにekikanList.concat()を行う
+    const ekikanKyori = getEkikanKyori(p.namae, q.namae, ekikanList.concat())
     if (ekikanKyori + p.saitan_kyori < q.saitan_kyori) {
       return {
         namae: q.namae,
@@ -62,4 +63,26 @@ const koushin = function (
   })
 }
 
-export { saitanWoBunri, koushin }
+/**
+ * 未確定の駅リストと駅間リストを受け取り、
+ * ダイクストラのアルゴリズムに従って各駅についての最短距離と、
+ * 最短距離が入ったリストを返却する
+ * @param {EkiT[]} ekiTList - 未確定の駅リスト
+ * @param {EkikanT[]} ekikanTList - 駅間リスト
+ * @returns {EkiT[]}
+ */
+const dijkstraMain = function (
+  ekiTList: EkiT[],
+  ekikanTList: EkikanT[] = GLOBAL_EKIKAN_LIST.concat(),
+): EkiT[] {
+  if (ekiTList.length === 0) {
+    return []
+  }
+  const [saitan, nokori] = saitanWoBunri(ekiTList)
+  console.log('saitan, nokori: ', [saitan, nokori])
+  const updated = koushin(saitan, nokori, ekikanTList.concat())
+  console.log('updated: ', updated)
+  return [saitan].concat(dijkstraMain(updated, ekikanTList.concat()))
+}
+
+export { saitanWoBunri, koushin, dijkstraMain }
